@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection</title> 
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+.seat {
+    width: 50px;
+    height: 50px;
+    border-radius: 5%;
+}
+
+.available {
+    background-color: #28a745;
+    color: white;
+}
+
+.booked {
+    background-color: #dc3545;
+    color: white;
+    cursor: not-allowed;
+}
+
+.selected {
+    background-color: #ffc107;
+    color: black;
+}
+
+.screen {
+    width: 100%;
+    margin: 0 auto;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+</style>
+<body>
+    <header class="bg-dark text-white py-3">
+        <div class="container text-center">
+            <h1>Select Your Seats</h1>
+        </div>
+    </header>
+    <section class="ticket-count py-5">
+        <div class="container text-center">
+            <label for="ticketNumber">Enter Number of Tickets: </label>
+            <input type="number" id="ticketNumber" class="form-control mb-3" placeholder="Enter number of tickets" min="1" max="10">
+            <button id="selectSeatsBtn" class="btn btn-primary" onclick="enableSeatSelection()">Select Seats</button>
+        </div>
+    </section>
+
+    <section class="seating-layout py-5" id="seatingLayout" style="display: none;">
+        <div class="container">
+            <h3 class="text-center mb-4">Seating Layout</h3>
+
+        
+            <div class="screen text-center mb-5">
+                <div class="bg-secondary py-2 text-white">SCREEN 1</div>
+            </div>
+
+            
+            <div class="section-title text-center mb-3">
+                <h4>Balcony View (10 Seats)</h4>
+            </div>
+            <div class="row justify-content-center" id="balconyView">
+               
+            </div>
+
+           
+            <div class="section-title text-center mt-5 mb-3">
+                <h4>Box View (10 Seats)</h4>
+            </div>
+            <div class="row justify-content-center" id="boxView">
+               
+            </div>
+
+           
+            <div class="section-title text-center mt-5 mb-3">
+                <h4>First Class (10 Seats)</h4>
+            </div>
+            <div class="row justify-content-center" id="firstClass">
+               
+            </div>
+
+
+            <div class="section-title text-center mt-5 mb-3">
+                <h4>Second Class (10 Seats)</h4>
+            </div>
+            <div class="row justify-content-center" id="secondClass">
+      
+            </div>
+
+            <div class="text-center mt-4">
+                <button id="confirmSeats" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" disabled>
+                    Confirm Selection
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirm Your Seats</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Selected Seats:</strong> <span id="selectedSeats"></span></p>
+                    <p><strong>Total Price:</strong> ₹<span id="totalPrice"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success">Proceed to Pay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="script.js"></script>
+
+    <script>
+
+        function enableSeatSelection() {
+            const numTickets = document.getElementById('ticketNumber').value;
+
+            if (numTickets < 1 || numTickets > 10) {
+                alert('Please enter a number between 1 and 10.');
+                return;
+            }
+
+         
+            document.getElementById('seatingLayout').style.display = 'block';
+
+         
+            generateSeats(numTickets);
+        }
+
+        function generateSeats(numTickets) {
+            
+            document.getElementById('balconyView').innerHTML = '';
+            document.getElementById('boxView').innerHTML = '';
+            document.getElementById('firstClass').innerHTML = '';
+            document.getElementById('secondClass').innerHTML = '';
+
+            
+            for (let i = 1; i <= 10; i++) {
+                const seatClass = i <= numTickets ? 'available' : 'booked';  // Make available seats based on numTickets
+                const seat = `<div class="col-1 mb-2">
+                    <button class="btn seat ${seatClass}" data-price="250">A${i}</button>
+                </div>`;
+                document.getElementById('balconyView').innerHTML += seat;
+            }
+
+          
+            for (let i = 1; i <= 10; i++) {
+                const seatClass = i <= numTickets ? 'available' : 'booked';
+                const seat = `<div class="col-1 mb-2">
+                    <button class="btn seat ${seatClass}" data-price="300">B${i}</button>
+                </div>`;
+                document.getElementById('boxView').innerHTML += seat;
+            }
+
+         
+            for (let i = 1; i <= 10; i++) {
+                const seatClass = i <= numTickets ? 'available' : 'booked';
+                const seat = `<div class="col-1 mb-2">
+                    <button class="btn seat ${seatClass}" data-price="400">C${i}</button>
+                </div>`;
+                document.getElementById('firstClass').innerHTML += seat;
+            }
+
+           
+            for (let i = 1; i <= 10; i++) {
+                const seatClass = i <= numTickets ? 'available' : 'booked';
+                const seat = `<div class="col-1 mb-2">
+                    <button class="btn seat ${seatClass}" data-price="150">D${i}</button>
+                </div>`;
+                document.getElementById('secondClass').innerHTML += seat;
+            }
+        }
+    </script>
+</body>
+</html>
